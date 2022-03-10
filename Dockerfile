@@ -81,16 +81,6 @@ RUN apt-add-repository -y ppa:rael-gc/rvm && \
 # install bundler
 RUN bash -lc "gem update --system && gem install bundler"
 
-# install conan
-RUN apt-get install -y python-dev && \
-	pip install --no-cache-dir --ignore-installed six --ignore-installed colorama \
-	    --ignore-installed requests --ignore-installed chardet \
-	    --ignore-installed urllib3 \
-	    --upgrade setuptools && \
-    pip install --no-cache-dir -Iv conan==1.43.0 && \
-    conan config install https://github.com/conan-io/conanclientcert.git
-
-
 # install NuGet (w. mono)
 # https://docs.microsoft.com/en-us/nuget/install-nuget-client-tools#macoslinux
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF &&\
