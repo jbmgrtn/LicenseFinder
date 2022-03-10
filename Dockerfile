@@ -73,9 +73,6 @@ ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
-# install Cargo
-RUN curl https://sh.rustup.rs -sSf | bash -ls -- -y --profile minimal
-
 #install rvm
 RUN apt-add-repository -y ppa:rael-gc/rvm && \
     apt update && apt install -y rvm && \
