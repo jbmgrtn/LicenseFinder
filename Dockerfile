@@ -3,7 +3,6 @@ FROM ubuntu:bionic
 WORKDIR /tmp
 
 # Versioning
-ENV MAVEN_VERSION 3.6.0
 ENV RUBY_VERSION 3.1.1
 
 # programs needed for building
@@ -33,12 +32,6 @@ RUN curl -L -o openjdk12.tar.gz https://download.java.net/java/GA/jdk12.0.2/e482
 ENV JAVA_HOME=/opt/jdk-12.0.2
 ENV PATH=$PATH:$JAVA_HOME/bin
 RUN java -version
-
-# install maven
-RUN curl -O https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
-    tar -xf apache-maven-$MAVEN_VERSION-bin.tar.gz; rm -rf apache-maven-$MAVEN_VERSION-bin.tar.gz && \
-    mv apache-maven-$MAVEN_VERSION /usr/local/lib/maven && \
-    ln -s /usr/local/lib/maven/bin/mvn /usr/local/bin/mvn
 
 WORKDIR /tmp
 # Fix the locale
