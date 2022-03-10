@@ -5,7 +5,6 @@ WORKDIR /tmp
 # Versioning
 ENV PIP_INSTALL_VERSION 19.0.2
 ENV PIP3_INSTALL_VERSION 20.0.2
-ENV GO_LANG_VERSION 1.14.3
 ENV MAVEN_VERSION 3.6.0
 ENV SBT_VERSION 1.3.3
 ENV GRADLE_VERSION 5.6.4
@@ -77,25 +76,6 @@ RUN curl -L -o gradle.zip https://services.gradle.org/distributions/gradle-$GRAD
     rm gradle.zip && \
     mv gradle-$GRADLE_VERSION /root/gradle
 ENV PATH=/root/gradle/bin:$PATH
-
-#install go
-WORKDIR /go
-RUN wget https://storage.googleapis.com/golang/go$GO_LANG_VERSION.linux-amd64.tar.gz -O go.tar.gz && tar --strip-components=1 -xf go.tar.gz && rm -f go.tar.gz
-ENV GOROOT /go
-ENV PATH=$PATH:/go/bin
-
-# godep is now required for license_finder to work for project that are still managed with GoDep
-ENV GOROOT=/go
-ENV GOPATH=/gopath
-ENV PATH=$PATH:$GOPATH/bin
-RUN mkdir /gopath && \
-  go get github.com/tools/godep && \
-  go get github.com/FiloSottile/gvt && \
-  go get github.com/Masterminds/glide && \
-  go get github.com/kardianos/govendor && \
-  go get github.com/golang/dep/cmd/dep && \
-  go get -u github.com/rancher/trash && \
-  go clean -cache
 
 WORKDIR /tmp
 # Fix the locale
