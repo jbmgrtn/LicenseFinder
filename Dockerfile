@@ -10,7 +10,6 @@ ENV MAVEN_VERSION 3.6.0
 ENV SBT_VERSION 1.3.3
 ENV GRADLE_VERSION 5.6.4
 ENV RUBY_VERSION 3.1.1
-ENV MIX_VERSION 1.0
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
 # programs needed for building
@@ -50,11 +49,6 @@ RUN curl -L -o openjdk12.tar.gz https://download.java.net/java/GA/jdk12.0.2/e482
 ENV JAVA_HOME=/opt/jdk-12.0.2
 ENV PATH=$PATH:$JAVA_HOME/bin
 RUN java -version
-
-# install rebar3
-RUN curl -o rebar3 https://s3.amazonaws.com/rebar3/rebar3 && \
-    sudo chmod +x rebar3 && \
-    sudo mv rebar3 /usr/local/bin/rebar3
 
 # install and update python and python-pip
 RUN apt-get install -y python python-pip python3-pip && \
@@ -122,14 +116,6 @@ RUN apt-add-repository -y ppa:rael-gc/rvm && \
 
 # install bundler
 RUN bash -lc "gem update --system && gem install bundler"
-
-#install mix
-RUN wget https://packages.erlang-solutions.com/erlang-solutions_${MIX_VERSION}_all.deb && \
-    sudo dpkg -i erlang-solutions_${MIX_VERSION}_all.deb && \
-    sudo rm -f erlang-solutions_${MIX_VERSION}_all.deb && \
-    sudo apt-get update && \
-    sudo apt-get install -y esl-erlang && \
-    sudo apt-get install -y elixir
 
 # install conan
 RUN apt-get install -y python-dev && \
