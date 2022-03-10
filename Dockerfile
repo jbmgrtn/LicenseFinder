@@ -3,8 +3,6 @@ FROM ubuntu:bionic
 WORKDIR /tmp
 
 # Versioning
-ENV PIP_INSTALL_VERSION 19.0.2
-ENV PIP3_INSTALL_VERSION 20.0.2
 ENV MAVEN_VERSION 3.6.0
 ENV GRADLE_VERSION 5.6.4
 ENV RUBY_VERSION 3.1.1
@@ -37,11 +35,6 @@ ENV JAVA_HOME=/opt/jdk-12.0.2
 ENV PATH=$PATH:$JAVA_HOME/bin
 RUN java -version
 
-# install and update python and python-pip
-RUN apt-get install -y python python-pip python3-pip && \
-    python3 -m pip install pip==$PIP3_INSTALL_VERSION --upgrade && \
-    python -m pip install pip==$PIP_INSTALL_VERSION --upgrade --force
-
 # install maven
 RUN curl -O https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
     tar -xf apache-maven-$MAVEN_VERSION-bin.tar.gz; rm -rf apache-maven-$MAVEN_VERSION-bin.tar.gz && \
@@ -70,17 +63,6 @@ RUN apt-add-repository -y ppa:rael-gc/rvm && \
 
 # install bundler
 RUN bash -lc "gem update --system && gem install bundler"
-
-# install miniconda
-# See https://docs.conda.io/en/latest/miniconda_hashes.html
-# for latest versions and SHAs.
-RUN  \
-  conda_installer=Miniconda3-py38_4.9.2-Linux-x86_64.sh &&\
-  ref='1314b90489f154602fd794accfc90446111514a5a72fe1f71ab83e07de9504a7' &&\
-  wget -q https://repo.anaconda.com/miniconda/${conda_installer} &&\
-  sha=`openssl sha256 "${conda_installer}" | cut -d' ' -f2` &&\
-  ([ "$sha" = "${ref}" ] || (echo "Verification failed: ${sha} != ${ref}"; false)) &&\
-  (echo; echo "yes") | sh "${conda_installer}"
 
 # install license_finder
 COPY . /LicenseFinder
