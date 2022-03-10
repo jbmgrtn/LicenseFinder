@@ -10,7 +10,6 @@ ENV MAVEN_VERSION 3.6.0
 ENV SBT_VERSION 1.3.3
 ENV GRADLE_VERSION 5.6.4
 ENV RUBY_VERSION 3.1.1
-ENV COMPOSER_ALLOW_SUPERUSER 1
 
 # programs needed for building
 RUN apt-get update && apt-get install -y \
@@ -142,23 +141,6 @@ RUN wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsof
   rm packages-microsoft-prod.deb &&\
   sudo apt-get update &&\
   sudo apt-get install -y dotnet-runtime-2.1 dotnet-sdk-2.1 dotnet-sdk-2.2 dotnet-sdk-3.0 dotnet-sdk-3.1
-
-# install Composer
-# The ARG and ENV are for installing tzdata which is part of this installaion.
-# https://serverfault.com/questions/949991/how-to-install-tzdata-on-a-ubuntu-docker-image
-ENV TZ=GMT
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 4F4EA0AAE5267A6C &&\
-    echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu bionic main" | sudo tee /etc/apt/sources.list.d/php.list &&\
-    apt-get update &&\
-    export DEBIAN_FRONTEND=noninteractive &&\
-    apt-get install -y php7.4-cli &&\
-    EXPECTED_COMPOSER_INSTALLER_CHECKSUM="$(curl --silent https://composer.github.io/installer.sig)" &&\
-    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&\
-    ACTUAL_COMPOSER_INSTALLER_CHECKSUM="$(php -r "echo hash_file('sha384', 'composer-setup.php');")" &&\
-    test "${ACTUAL_COMPOSER_INSTALLER_CHECKSUM}" = "${EXPECTED_COMPOSER_INSTALLER_CHECKSUM}" || (echo "ERROR: Invalid installer checksum" >&2; false) &&\
-    php composer-setup.php &&\
-    php -r "unlink('composer-setup.php');" &&\
-    mv composer.phar /usr/bin/composer
 
 # install miniconda
 # See https://docs.conda.io/en/latest/miniconda_hashes.html
