@@ -4,7 +4,6 @@ WORKDIR /tmp
 
 # Versioning
 ENV MAVEN_VERSION 3.6.0
-ENV GRADLE_VERSION 5.6.4
 ENV RUBY_VERSION 3.1.1
 
 # programs needed for building
@@ -40,13 +39,6 @@ RUN curl -O https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binarie
     tar -xf apache-maven-$MAVEN_VERSION-bin.tar.gz; rm -rf apache-maven-$MAVEN_VERSION-bin.tar.gz && \
     mv apache-maven-$MAVEN_VERSION /usr/local/lib/maven && \
     ln -s /usr/local/lib/maven/bin/mvn /usr/local/bin/mvn
-
-# install gradle
-RUN curl -L -o gradle.zip https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip && \
-    unzip -q gradle.zip && \
-    rm gradle.zip && \
-    mv gradle-$GRADLE_VERSION /root/gradle
-ENV PATH=/root/gradle/bin:$PATH
 
 WORKDIR /tmp
 # Fix the locale
