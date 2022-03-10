@@ -23,14 +23,14 @@ RUN add-apt-repository ppa:git-core/ppa && apt-get update && apt-get install -y 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
     apt-get -y install nodejs
 
-# install jdk 12
-RUN curl -L -o openjdk12.tar.gz https://download.java.net/java/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_linux-x64_bin.tar.gz && \
-    tar xvf openjdk12.tar.gz && \
-    rm openjdk12.tar.gz && \
-    sudo mv jdk-12.0.2 /opt/ && \
-    sudo rm /opt/jdk-12.0.2/lib/src.zip
-ENV JAVA_HOME=/opt/jdk-12.0.2
-ENV PATH=$PATH:$JAVA_HOME/bin
+# install JDK
+# https://packages.ubuntu.com/bionic/openjdk-17-jdk
+# --no-install-recommends to not install ca-certificates-java that makes JDK installation fails
+# b/c ca-certificates-java requires a Java installation that is not complete yet
+# https://github.com/adoptium/installer/issues/105#issuecomment-490116222
+RUN apt-get update && apt-get install -y --no-install-recommends openjdk-17-jdk
+RUN update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+RUN update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
 RUN java -version
 
 WORKDIR /tmp
