@@ -81,22 +81,6 @@ RUN apt-add-repository -y ppa:rael-gc/rvm && \
 # install bundler
 RUN bash -lc "gem update --system && gem install bundler"
 
-# install NuGet (w. mono)
-# https://docs.microsoft.com/en-us/nuget/install-nuget-client-tools#macoslinux
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF &&\
-  echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list &&\
-  apt-get update &&\
-  apt-get install -y mono-complete &&\
-  curl -o "/usr/local/bin/nuget.exe" "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" &&\
-  curl -o "/usr/local/bin/nugetv3.5.0.exe" "https://dist.nuget.org/win-x86-commandline/v3.5.0/nuget.exe"
-
-# install dotnet core
-RUN wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb &&\
-  sudo dpkg -i packages-microsoft-prod.deb &&\
-  rm packages-microsoft-prod.deb &&\
-  sudo apt-get update &&\
-  sudo apt-get install -y dotnet-runtime-2.1 dotnet-sdk-2.1 dotnet-sdk-2.2 dotnet-sdk-3.0 dotnet-sdk-3.1
-
 # install miniconda
 # See https://docs.conda.io/en/latest/miniconda_hashes.html
 # for latest versions and SHAs.
