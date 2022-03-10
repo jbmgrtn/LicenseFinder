@@ -6,7 +6,6 @@ WORKDIR /tmp
 ENV PIP_INSTALL_VERSION 19.0.2
 ENV PIP3_INSTALL_VERSION 20.0.2
 ENV MAVEN_VERSION 3.6.0
-ENV SBT_VERSION 1.3.3
 ENV GRADLE_VERSION 5.6.4
 ENV RUBY_VERSION 3.1.1
 
@@ -58,17 +57,6 @@ RUN curl -O https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binarie
     tar -xf apache-maven-$MAVEN_VERSION-bin.tar.gz; rm -rf apache-maven-$MAVEN_VERSION-bin.tar.gz && \
     mv apache-maven-$MAVEN_VERSION /usr/local/lib/maven && \
     ln -s /usr/local/lib/maven/bin/mvn /usr/local/bin/mvn
-
-# install sbt
-RUN mkdir -p /usr/local/share/sbt-launcher-packaging && \
-    curl --progress \
-    --retry 3 \
-    --retry-delay 15 \
-    --location "https://github.com/sbt/sbt/releases/download/v${SBT_VERSION}/sbt-${SBT_VERSION}.tgz" \
-    --output "/tmp/sbt-${SBT_VERSION}.tgz" && \
-    tar -xzf "/tmp/sbt-${SBT_VERSION}.tgz" -C /usr/local/share/sbt-launcher-packaging --strip-components=1 && \
-    ln -s /usr/local/share/sbt-launcher-packaging/bin/sbt /usr/local/bin/sbt && \
-    rm -f "/tmp/sbt-${SBT_VERSION}.tgz"
 
 # install gradle
 RUN curl -L -o gradle.zip https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip && \
