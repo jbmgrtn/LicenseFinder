@@ -4,6 +4,7 @@ WORKDIR /tmp
 
 # Versioning
 ENV RUBY_VERSION 3.1.1
+ENV JAVA_VERSION 17
 
 # programs needed for building
 RUN apt-get update && apt-get install -y \
@@ -23,14 +24,21 @@ RUN add-apt-repository ppa:git-core/ppa && apt-get update && apt-get install -y 
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
     apt-get -y install nodejs
 
-# install jdk 12
-RUN curl -L -o openjdk12.tar.gz https://download.java.net/java/GA/jdk12.0.2/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-12.0.2_linux-x64_bin.tar.gz && \
-    tar xvf openjdk12.tar.gz && \
-    rm openjdk12.tar.gz && \
-    sudo mv jdk-12.0.2 /opt/ && \
-    sudo rm /opt/jdk-12.0.2/lib/src.zip
-ENV JAVA_HOME=/opt/jdk-12.0.2
-ENV PATH=$PATH:$JAVA_HOME/bin
+# install JDK
+# https://docs.azul.com/core/zulu-openjdk/install/debian#install-from-azul-apt-repository
+# add Azul's public key
+RUN apt-key adv \
+  --keyserver hkp://keyserver.ubuntu.com:80 \
+  --recv-keys 0xB1998361219BD9C9
+# download and install the package that adds 
+# the Azul APT repository to the list of sources 
+RUN curl -O https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-3_all.deb
+# install the package
+RUN apt-get install ./zulu-repo_1.0.0-3_all.deb
+# update the package sources
+RUN apt-get update
+# install Azul Zulu JDK
+RUN apt-get install -y zulu${JAVA_VERSION}-jdk
 RUN java -version
 
 WORKDIR /tmp
